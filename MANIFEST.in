@@ -1,0 +1,9 @@
+recursive-include Docs *.md
+recursive-include Examples *.py *.cs *.csproj *.md
+recursive-include Tests *.py
+include README.md AGENTS.md
+recursive-include scripts *.py
+prune Examples/DotNetClient/bin
+prune Examples/DotNetClient/obj
+
+exclude scripts/check_six_launchers.py scripts/validate_ltx_real.py scripts/validate_ltx_cancel.py

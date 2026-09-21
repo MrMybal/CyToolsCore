@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cytools:v1:worker",
+  "$ref": "#/$defs/worker",
+  "$defs": {
+    "worker": {
+      "type": "object",
+      "properties": {
+        "workerId": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "Stopped",
+            "Starting",
+            "Idle",
+            "Loading",
+            "Ready",
+            "Busy",
+            "Unloading",
+            "Stopping",
+            "Failed"
+          ]
+        },
+        "pid": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "alive": {
+          "type": "boolean"
+        },
+        "lastResponseMonotonic": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "heartbeatSupported": {
+          "type": "boolean"
+        },
+        "releaseLevels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Temporary",
+              "Job",
+              "Model",
+              "Worker",
+              "All"
+            ]
+          }
+        }
+      },
+      "required": [
+        "state"
+      ]
+    }
+  }
+}

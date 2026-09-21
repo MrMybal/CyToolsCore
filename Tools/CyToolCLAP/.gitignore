@@ -1,0 +1,8 @@
+.venv/
+.cytools/
+__pycache__/
+.pytest_cache/
+models/
+audio/
+reports/
+params.last-run.json

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cytools.local/schemas/installation-storage.schema.json",
+  "title": "CyTools installation storage preferences",
+  "type": "object",
+  "required": ["schemaVersion"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "downloadMode": {"enum": ["local", "shared"]},
+    "sharedRoot": {"type": "string", "minLength": 1},
+    "cudaComponent": {"type": "string", "pattern": "^(|[a-f0-9]{64})$"}
+  },
+  "additionalProperties": false
+}

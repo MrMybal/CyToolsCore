@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cytools:v1:resources",
+  "$ref": "#/$defs/resources",
+  "$defs": {
+    "resources": {
+      "type": "object",
+      "properties": {
+        "ramBytes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "vramBytes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "diskBytes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "temporaryDiskBytes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cpuThreads": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "networkRequired": {
+          "type": "boolean"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "preferredDevice": {
+          "type": "string"
+        },
+        "fallbackOptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": []
+          }
+        },
+        "cpu": {
+          "type": "object",
+          "properties": {
+            "supported": {
+              "type": "boolean"
+            },
+            "minimumCores": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "recommendedCores": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minimumThreads": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "recommendedThreads": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "instructions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "supported": {
+              "type": "boolean"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "vendors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "computeBackends": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "ram": {
+          "$ref": "#/$defs/memory"
+        },
+        "vram": {
+          "$ref": "#/$defs/memory"
+        }
+      },
+      "required": []
+    },
+    "memory": {
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "recommended": {
+          "type": "number",
+          "minimum": 0
+        },
+        "estimatedLoaded": {
+          "type": "number",
+          "minimum": 0
+        },
+        "estimatedRuntime": {
+          "type": "number",
+          "minimum": 0
+        },
+        "estimatedPeak": {
+          "type": "number",
+          "minimum": 0
+        },
+        "observedPeak": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": []
+    }
+  }
+}

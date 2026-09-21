@@ -1,0 +1,20 @@
+import tempfile
+import unittest
+from tool import create_runtime
+
+
+class ToolTests(unittest.TestCase):
+    def test_echo_and_private_jobs(self):
+        with tempfile.TemporaryDirectory() as root, create_runtime(root) as runtime:
+            alice = runtime.authenticate(runtime.create_client('Alice')['token'])
+            bob = runtime.authenticate(runtime.create_client('Bob')['token'])
+            session = runtime.create_session(alice)
+            job = runtime.submit(alice, session['sessionId'], 'echo', {'text': 'Hello'})
+            result = runtime.wait(alice, job['jobId'])
+            self.assertEqual(result['state'], 'Completed')
+            self.assertEqual(result['outputs'], {'text': 'Hello'})
+            self.assertEqual(runtime.list_jobs(bob), [])
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,0 +1,6 @@
+# Install CyToolsCore from the local SDK wheel or checkout separately.
+torch==2.8.0
+transformers==4.57.6
+soundfile==0.13.1
+numpy>=1.26,<3
+scipy>=1.13,<2

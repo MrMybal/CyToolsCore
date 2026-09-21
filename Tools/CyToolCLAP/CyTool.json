@@ -1,0 +1,327 @@
+{
+  "schemaVersion": 1,
+  "protocolVersion": "1.0",
+  "id": "cy.tool.clap",
+  "name": "CyToolCLAP",
+  "version": "0.1.0",
+  "description": "Local CLAP zero-shot sound and music classification. Compares audio with candidate descriptions; does not identify song titles.",
+  "vendor": "Cyberalien",
+  "author": "Cyberalien",
+  "categories": [
+    "audio",
+    "classification"
+  ],
+  "tags": [
+    "CLAP",
+    "sound",
+    "music"
+  ],
+  "executable": "python tool.py",
+  "capabilities": [
+    "jobs",
+    "cancellation",
+    "progress",
+    "audio-classification"
+  ],
+  "interfaces": [
+    "Native",
+    "CLI",
+    "JSONL",
+    "HTTP",
+    "MCP"
+  ],
+  "platforms": [
+    {
+      "os": "Windows",
+      "architecture": "x64",
+      "status": "Supported",
+      "computeBackends": [
+        "CPU"
+      ]
+    },
+    {
+      "os": "Linux",
+      "architecture": "x64",
+      "status": "Experimental",
+      "computeBackends": [
+        "CPU"
+      ]
+    },
+    {
+      "os": "macOS",
+      "architecture": "ARM64",
+      "status": "Experimental",
+      "computeBackends": [
+        "CPU"
+      ]
+    }
+  ],
+  "runtimeRequirements": [],
+  "concurrency": {
+    "policy": "Sequential",
+    "maxWorkers": 1
+  },
+  "idleUnloadPolicy": "AfterJob",
+  "backends": [
+    {
+      "id": "transformers-cpu",
+      "name": "Transformers / PyTorch CPU",
+      "threadSafe": false,
+      "shareableModelInstance": false,
+      "concurrentInference": false,
+      "maxConcurrentInference": 1,
+      "models": [
+        {
+          "id": "clap-htsat-unfused",
+          "name": "laion/clap-htsat-unfused",
+          "version": "8fa0f1c6d0433df6e97c127f64b2a1d6c0dcda8a",
+          "source": "https://huggingface.co/laion/clap-htsat-unfused",
+          "license": "Apache-2.0",
+          "location": "Local",
+          "runsLocally": true,
+          "installed": false,
+          "computeBackends": [
+            "CPU"
+          ],
+          "files": [
+            {
+              "path": "pytorch_model.bin",
+              "sha256": "1cd3c601bc4afe0fa87be3de4c13dd2cfadd249fac1e29acf74a9b296c3219bb",
+              "sizeBytes": 614525833
+            }
+          ],
+          "downloadSize": 617900000
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "id": "classify_audio",
+      "name": "Identify sound or musical content",
+      "description": "Rank candidate sound/music descriptions for a local audio file. Returns similarities, relative scores and a JSON report; no song-title fingerprinting.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "audio_file": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "x-cy-kind": "File",
+            "description": "File inside the configured audio root."
+          },
+          "preset": {
+            "enum": [
+              "general",
+              "sounds",
+              "music"
+            ],
+            "default": "general"
+          },
+          "candidate_labels": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "minItems": 2,
+            "maxItems": 128,
+            "uniqueItems": true,
+            "description": "Optional English descriptions, replacing the preset."
+          },
+          "top_k": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5
+          },
+          "max_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 120,
+            "default": 30
+          }
+        },
+        "required": [
+          "audio_file"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "model_id": {
+            "type": "string"
+          },
+          "model_revision": {
+            "type": "string"
+          },
+          "device": {
+            "const": "cpu"
+          },
+          "sample_rate": {
+            "const": 48000
+          },
+          "worker_memory_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "memory_measurement": {
+            "type": "string"
+          },
+          "source_duration_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "analysed_seconds": {
+            "type": "number",
+            "minimum": 0
+          },
+          "candidate_count": {
+            "type": "integer",
+            "minimum": 2
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "cosine_similarity": {
+                  "type": "number",
+                  "minimum": -1.001,
+                  "maximum": 1.001
+                },
+                "relative_score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "label",
+                "description",
+                "cosine_similarity",
+                "relative_score"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 1,
+            "maxItems": 10
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "start_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "end_seconds": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "label": {
+                  "type": "string"
+                },
+                "cosine_similarity": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "start_seconds",
+                "end_seconds",
+                "label",
+                "cosine_similarity"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "score_meaning": {
+            "type": "string"
+          },
+          "timings": {
+            "type": "object",
+            "properties": {
+              "load_and_audio_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "inference_seconds": {
+                "type": "number",
+                "minimum": 0
+              },
+              "total_seconds": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "load_and_audio_seconds",
+              "inference_seconds",
+              "total_seconds"
+            ],
+            "additionalProperties": false
+          },
+          "report_file": {
+            "type": "string",
+            "x-cy-kind": "File"
+          }
+        },
+        "required": [
+          "model_id",
+          "model_revision",
+          "device",
+          "sample_rate",
+          "worker_memory_bytes",
+          "memory_measurement",
+          "source_duration_seconds",
+          "analysed_seconds",
+          "candidate_count",
+          "matches",
+          "segments",
+          "warnings",
+          "score_meaning",
+          "timings",
+          "report_file"
+        ],
+        "additionalProperties": false
+      },
+      "supportedBackends": [
+        "transformers-cpu"
+      ],
+      "permissions": [],
+      "canRunAsync": true,
+      "canCancel": true,
+      "supportsProgress": true,
+      "resourceRequirements": {
+        "ramBytes": 6442450944,
+        "cpuThreads": 4,
+        "diskBytes": 314572800,
+        "networkRequired": false
+      },
+      "outputs": [
+        {
+          "id": "report_file",
+          "type": "File",
+          "mimeType": "application/json",
+          "fileExtension": ".json",
+          "description": "Isolated job classification report"
+        }
+      ]
+    }
+  ]
+}

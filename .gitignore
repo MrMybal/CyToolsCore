@@ -1,0 +1,36 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+.cytools/
+.test-artifacts/
+bin/
+obj/
+# Local runtime state and optional model assets
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+*.db
+*.log
+*.pem
+*.key
+.vscode/
+.idea/
+.codex/
+.claude/
+reports/
+Reports/
+models/
+*.safetensors
+*.gguf
+params.last-run.json
+Tools/*/Docs/
+# Machine-specific integration harnesses kept locally
+scripts/check_six_launchers.py
+scripts/validate_ltx_real.py
+scripts/validate_ltx_cancel.py

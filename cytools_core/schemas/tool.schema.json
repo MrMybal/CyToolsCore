@@ -1,0 +1,817 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cytools:v1:tool",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "integer"
+    },
+    "protocolVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+    },
+    "name": {
+      "type": "string"
+    },
+    "displayName": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "vendor": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "executable": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "documentation": {
+      "type": "string"
+    },
+    "homepage": {
+      "type": "string"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/operation"
+      }
+    },
+    "backends": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/backend"
+      }
+    },
+    "platforms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/platform"
+      }
+    },
+    "runtimeRequirements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
+    },
+    "interfaces": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "concurrency": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "string",
+          "enum": [
+            "Exclusive",
+            "Sequential",
+            "Concurrent",
+            "SharedModelSequential",
+            "SharedModelConcurrent",
+            "MultiWorker",
+            "MultiGPU"
+          ]
+        },
+        "maxWorkers": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        }
+      },
+      "required": [
+        "policy"
+      ]
+    },
+    "idleUnloadPolicy": {
+      "type": "string",
+      "enum": [
+        "Never",
+        "AfterJob",
+        "After1Minute",
+        "After5Minutes",
+        "After15Minutes",
+        "WhenResourcesNeeded",
+        "Custom"
+      ]
+    },
+    "extensions": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "protocolVersion",
+    "id",
+    "name",
+    "version",
+    "description",
+    "operations",
+    "platforms",
+    "concurrency"
+  ],
+  "$defs": {
+    "operation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "inputSchema": {
+          "$ref": "#/$defs/parameter"
+        },
+        "outputSchema": {
+          "$ref": "#/$defs/parameter"
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/output"
+          }
+        },
+        "supportedBackends": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+          }
+        },
+        "resourceRequirements": {
+          "$ref": "#/$defs/resources"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/platform"
+          }
+        },
+        "canRunAsync": {
+          "type": "boolean"
+        },
+        "canCancel": {
+          "type": "boolean"
+        },
+        "supportsProgress": {
+          "type": "boolean"
+        },
+        "supportsPreview": {
+          "type": "boolean"
+        },
+        "supportsStreaming": {
+          "type": "boolean"
+        },
+        "estimatedDurationSeconds": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "inputSchema",
+        "outputSchema"
+      ]
+    },
+    "parameter": {
+      "type": "object",
+      "properties": {
+        "x-cy-kind": {
+          "type": "string",
+          "enum": [
+            "String",
+            "MultilineString",
+            "Boolean",
+            "Integer",
+            "Float",
+            "Enum",
+            "File",
+            "Files",
+            "Directory",
+            "Image",
+            "Audio",
+            "Video",
+            "Object",
+            "Array",
+            "Reference",
+            "Seed"
+          ]
+        },
+        "x-cy-ui": {
+          "type": "object",
+          "properties": {
+            "help": {
+              "type": "string"
+            },
+            "advanced": {
+              "type": "boolean"
+            },
+            "hidden": {
+              "type": "boolean"
+            },
+            "runtimeGenerated": {
+              "type": "boolean"
+            },
+            "step": {
+              "type": "number",
+              "minimum": 0
+            },
+            "visibleWhen": {
+              "type": "object"
+            }
+          },
+          "required": []
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "$defs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/parameter"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "allOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "anyOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "oneOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "if": {
+          "$ref": "#/$defs/parameter"
+        },
+        "then": {
+          "$ref": "#/$defs/parameter"
+        },
+        "else": {
+          "$ref": "#/$defs/parameter"
+        }
+      },
+      "required": []
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "optional": {
+          "type": "boolean"
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "fileExtension": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "id",
+        "type"
+      ]
+    },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "ramBytes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "vramBytes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "diskBytes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "temporaryDiskBytes": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cpuThreads": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "networkRequired": {
+          "type": "boolean"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "preferredDevice": {
+          "type": "string"
+        },
+        "fallbackOptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object"
+              },
+              "description": {
+                "type": "string"
+              }
+            },
+            "required": []
+          }
+        },
+        "cpu": {
+          "type": "object",
+          "properties": {
+            "supported": {
+              "type": "boolean"
+            },
+            "minimumCores": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "recommendedCores": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "minimumThreads": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "recommendedThreads": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "instructions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "gpu": {
+          "type": "object",
+          "properties": {
+            "supported": {
+              "type": "boolean"
+            },
+            "required": {
+              "type": "boolean"
+            },
+            "vendors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "computeBackends": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": []
+        },
+        "ram": {
+          "$ref": "#/$defs/memory"
+        },
+        "vram": {
+          "$ref": "#/$defs/memory"
+        }
+      },
+      "required": []
+    },
+    "memory": {
+      "type": "object",
+      "properties": {
+        "minimum": {
+          "type": "number",
+          "minimum": 0
+        },
+        "recommended": {
+          "type": "number",
+          "minimum": 0
+        },
+        "estimatedLoaded": {
+          "type": "number",
+          "minimum": 0
+        },
+        "estimatedRuntime": {
+          "type": "number",
+          "minimum": 0
+        },
+        "estimatedPeak": {
+          "type": "number",
+          "minimum": 0
+        },
+        "observedPeak": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": []
+    },
+    "platform": {
+      "type": "object",
+      "properties": {
+        "os": {
+          "type": "string"
+        },
+        "architecture": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Supported",
+            "Experimental",
+            "Unsupported",
+            "Unknown"
+          ]
+        },
+        "minimumOSVersion": {
+          "type": "string"
+        },
+        "computeBackends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        },
+        "tested": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "osVersion": {
+                "type": "string"
+              },
+              "device": {
+                "type": "string"
+              },
+              "driver": {
+                "type": "string"
+              },
+              "runtime": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              }
+            },
+            "required": []
+          }
+        }
+      },
+      "required": [
+        "os",
+        "architecture",
+        "status"
+      ]
+    },
+    "backend": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/model"
+          }
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/platform"
+          }
+        },
+        "shareableModelInstance": {
+          "type": "boolean"
+        },
+        "threadSafe": {
+          "type": "boolean"
+        },
+        "concurrentInference": {
+          "type": "boolean"
+        },
+        "maxConcurrentInference": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dependency"
+          }
+        },
+        "resourceRequirements": {
+          "$ref": "#/$defs/resources"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "license": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string",
+          "enum": [
+            "Local",
+            "Remote",
+            "Hybrid"
+          ]
+        },
+        "runsLocally": {
+          "type": "boolean"
+        },
+        "installed": {
+          "type": "boolean"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/modelFile"
+          }
+        },
+        "downloadSize": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "installedSize": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/platform"
+          }
+        },
+        "computeBackends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "precisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "quantizations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resourceProfiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/profile"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resourceRequirements": {
+          "$ref": "#/$defs/resources"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "version"
+      ]
+    },
+    "modelFile": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$"
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "etag": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
+    "profile": {
+      "type": "object",
+      "properties": {
+        "toolVersion": {
+          "type": "string"
+        },
+        "backendId": {
+          "type": "string"
+        },
+        "modelVersion": {
+          "type": "string"
+        },
+        "platform": {
+          "type": "string"
+        },
+        "computeBackend": {
+          "type": "string"
+        },
+        "precision": {
+          "type": "string"
+        },
+        "quantization": {
+          "type": "string"
+        },
+        "parametersProfile": {
+          "type": "string"
+        },
+        "estimated": {
+          "$ref": "#/$defs/resources"
+        },
+        "observed": {
+          "$ref": "#/$defs/resources"
+        }
+      },
+      "required": []
+    },
+    "dependency": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+        },
+        "version": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string"
+        },
+        "installed": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string"
+        },
+        "executable": {
+          "type": "string"
+        },
+        "platforms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/platform"
+          }
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+}

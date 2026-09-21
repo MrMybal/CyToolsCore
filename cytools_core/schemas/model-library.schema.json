@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cytools:v1:model-library",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "models"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "models": {"type": "array", "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "name", "path", "format", "kind", "base", "license", "source", "validation"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "format": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["model", "lora"]},
+        "base": {"type": "string"},
+        "license": {"type": "string"},
+        "source": {"type": "string"},
+        "validation": {"type": "string"}
+      }
+    }}
+  }
+}

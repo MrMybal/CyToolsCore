@@ -1,0 +1,20 @@
+from pathlib import Path
+from cytools_core import Runtime, load_manifest
+from cytools_core.transports.cli import run_cli
+
+
+def create_runtime(data_dir, **options):
+    runtime = Runtime(load_manifest(Path(__file__).with_name('CyTool.json')), data_dir, **options)
+
+    runtime.configure_inputs(Path(__file__).resolve().parents[1]/'data/inputs', fields={})
+
+    def echo(context, parameters):
+        context.cancellation.check()
+        return {'text': parameters['text']}
+
+    runtime.register('echo', echo)
+    return runtime
+
+
+if __name__ == '__main__':
+    raise SystemExit(run_cli(create_runtime))

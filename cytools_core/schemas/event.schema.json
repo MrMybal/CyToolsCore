@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cytools:v1:event",
+  "$ref": "#/$defs/event",
+  "$defs": {
+    "event": {
+      "type": "object",
+      "properties": {
+        "sequence": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "type": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        },
+        "toolId": {
+          "type": "string"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "sessionId": {
+          "type": "string"
+        },
+        "jobId": {
+          "type": "string"
+        },
+        "workerId": {
+          "type": "string"
+        },
+        "data": {}
+      },
+      "required": [
+        "sequence",
+        "type",
+        "timestamp",
+        "toolId",
+        "data"
+      ]
+    }
+  }
+}

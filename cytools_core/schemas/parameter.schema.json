@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cytools:v1:parameter",
+  "$ref": "#/$defs/parameter",
+  "$defs": {
+    "parameter": {
+      "type": "object",
+      "properties": {
+        "x-cy-kind": {
+          "type": "string",
+          "enum": [
+            "String",
+            "MultilineString",
+            "Boolean",
+            "Integer",
+            "Float",
+            "Enum",
+            "File",
+            "Files",
+            "Directory",
+            "Image",
+            "Audio",
+            "Video",
+            "Object",
+            "Array",
+            "Reference",
+            "Seed"
+          ]
+        },
+        "x-cy-ui": {
+          "type": "object",
+          "properties": {
+            "help": {
+              "type": "string"
+            },
+            "advanced": {
+              "type": "boolean"
+            },
+            "hidden": {
+              "type": "boolean"
+            },
+            "runtimeGenerated": {
+              "type": "boolean"
+            },
+            "step": {
+              "type": "number",
+              "minimum": 0
+            },
+            "visibleWhen": {
+              "type": "object"
+            }
+          },
+          "required": []
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "$defs": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "items": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/parameter"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "allOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "anyOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "oneOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/parameter"
+          }
+        },
+        "if": {
+          "$ref": "#/$defs/parameter"
+        },
+        "then": {
+          "$ref": "#/$defs/parameter"
+        },
+        "else": {
+          "$ref": "#/$defs/parameter"
+        }
+      },
+      "required": []
+    }
+  }
+}

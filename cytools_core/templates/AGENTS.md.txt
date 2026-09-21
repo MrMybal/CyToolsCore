@@ -1,0 +1,61 @@
+# Creating and maintaining __TOOL_NAME__
+
+Mesh Tools must follow Docs/MeshViewer.md: use --desktop --mesh-viewer, open completed
+results in the embedded viewport, provide orbit/free mouse-keyboard navigation,
+close inspection, scene presets and studio/sun lighting. Static images are insufficient.
+
+Read Docs/SharedInstallation.md. Provide configurable local/shared download storage
+and explicit versioned CUDA Toolkit selection. Keep Python private, never move
+existing models or accept provider terms implicitly. Expose access-required states
+and official links to users and AI clients. Ship without weights and heavy caches.
+
+Read README.md, CyTool.json and tool.py before modifying this tool.
+Read Docs/Localization.md. English is the default UI language; French is selectable
+and persisted. Options includes language, theme, text scale and component licenses.
+Add every new visible string to app/locales/ui.json (en/fr); never translate user data.
+Read Docs/GenerationConfigurations.md. Save/load configuration and optional generation
+autosave are mandatory. Use explicit configure_generation callbacks; exclude secrets.
+For desktop layout these files are inside app/. Read Docs/StandaloneDelivery.md too.
+Every user-facing Tool must ship a usable Dear ImGui UI, a Windows .exe and a suitable
+Linux launcher. Final root: launcher(s), LISEZ-MOI.md, app/, data/, runtime/ only.
+Provide guided model access/download/resume in the UI and staged GitHub updates with
+rollback and data preservation. Do not claim a scaffold is a finished application.
+Read CyToolsGuide.md (local copy) or CyToolsCore Docs/AgentGuide.md as the implementation contract.
+Run `cytools docs` to locate the complete documentation installed with the SDK.
+
+1. Declare every operation in CyTool.json: inputSchema, outputSchema, supportedBackends,
+   permissions, resourceRequirements and actual platform support.
+2. Register one handler per declared operation in create_runtime().
+3. Handler signature: handler(context, parameters) -> JSON-serializable outputs.
+4. Check context.cancellation during loops; use context.cancellation.sleep() for waits.
+5. Create outputs using context.path('outputs/name.ext'). Never share a fixed output path.
+6. Use context.progress(percent, currentStep='...') when supportsProgress is true.
+7. Use runtime.register(id, handler, estimate=...) for parameter-dependent RAM/VRAM.
+8. Do not implement a second scheduler, job registry, authentication system or MCP parser.
+9. No UI, specific AI model or external CLI is required by the core.
+10. Treat external files and executable arguments as untrusted; use argv, never shell interpolation.
+11. Add real operation tests (invalid inputs, failure, cancellation, output validity).
+12. Run: cytools validate CyTool.json; python -m unittest -v; python tool.py describe;
+    python tool.py invoke echo --params-file params.json.
+13. Document dependencies, model licenses, platform verification and limitations honestly.
+14. A descriptor does not implement a backend. Do not claim a capability without code and tests.
+
+User operation parameters cannot choose clientId, owner or a different session.
+Permissions belong to the authenticated transport context. Heavy/untrusted runtimes
+belong in ProcessWorker; in-process cancellation is cooperative, not forcible.
+# Standalone diagnostics and model extensions
+
+Read Docs/StandaloneDiagnosticsAndModels.md. Ship a selectable/copyable application log,
+explicit planned/actual video resolution, a local model library and compatible LoRA/device
+controls. Save the effective selections in generation recipes. Do not claim unsupported
+CPU paths, arbitrary architecture compatibility or generic four-step acceleration.
+
+
+Lire [Docs/FullOperationAccess.md](Docs/FullOperationAccess.md) : inventaire des capacités natives, parité complète des options métier entre IA et standalone, contrats de sorties composables et preuves de validation. Un formulaire simplifié ne limite pas le contrat du Tool.
+
+Lire Docs/AutomaticInputs.md (AutomaticInputs.md depuis Docs) : chemins absolus acceptés pour les entrées locales, copie automatique privée par job, aucune copie manuelle exigée de l’IA.
+
+
+## Task-owned files (SDK 0.9.0)
+
+Read Docs/TaskFiles.md (TaskFiles.md from this Docs directory). Configure input roots and all file fields for automatic imports; AI sessions are temporary by default. FinishTask removes imported copies and generated workspaces after workers stop; export wanted results first. Standalone sessions explicitly use temporary=False.

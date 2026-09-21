@@ -1,0 +1,90 @@
+"""Optional ImGui frontend generated outside CyToolsCore; adapt widgets to the Tool."""
+import json
+import os
+from pathlib import Path
+import sys
+from imgui_bundle import imgui, hello_imgui
+from ui_common import imgui, run, configure_generation
+from cytools_core import load_manifest
+from tool import create_runtime
+
+APP = Path(__file__).resolve().parent
+ROOT = APP.parent
+
+def main():
+    operations = load_manifest(APP/'CyTool.json')['operations']
+    selected, job, error, frames = 0, None, '', 0
+    values = {}
+    runner = hello_imgui.RunnerParams()
+    runner.app_window_params.window_title = '__TOOL_NAME__'
+    runner.app_window_params.window_geometry.size = (960, 700)
+    (ROOT/'data/settings').mkdir(parents=True, exist_ok=True)
+    runner.ini_filename = str(ROOT/'data/settings/imgui.ini')
+    with create_runtime(ROOT/'data/jobs') as runtime:
+        actor = runtime.authenticate(runtime.create_client('ImGui')['token'])
+        session = runtime.create_session(actor, temporary=False)['sessionId']
+        def gui():
+            nonlocal selected, job, error, frames
+            frames += 1
+            if job: job = runtime.get_job(actor, job['jobId'])
+            active = bool(job and job['state'] not in ('Completed','Failed','Cancelled'))
+            imgui.text('__TOOL_NAME__')
+            imgui.begin_disabled(active)
+            _, selected = imgui.combo('Operation', selected, [op['name'] for op in operations])
+            operation = operations[selected]
+            params = values.setdefault(operation['id'], {})
+            imgui.text_wrapped(operation.get('description', ''))
+            for key, schema in operation['inputSchema'].get('properties', {}).items():
+                current = params.get(key, schema.get('default'))
+                label = schema.get('title', key)
+                if 'enum' in schema:
+                    choices = schema['enum']
+                    _, index = imgui.combo(label, choices.index(current) if current in choices else 0, [str(x) for x in choices])
+                    params[key] = choices[index]
+                elif schema.get('type') == 'boolean':
+                    _, params[key] = imgui.checkbox(label, bool(current))
+                elif schema.get('type') in ('integer', 'number'):
+                    # Optional empty numeric values are omitted; validation remains in the Core.
+                    _, text = imgui.input_text(label, '' if current is None else str(current))
+                    params[key] = text
+                else:
+                    text = current if isinstance(current, str) else '' if current is None else json.dumps(current)
+                    _, params[key] = imgui.input_text(label, text)
+                if imgui.is_item_hovered(): imgui.set_tooltip(schema.get('description', key))
+            if imgui.button('Run'):
+                try:
+                    payload = dict(params)
+                    for key, schema in operation['inputSchema'].get('properties', {}).items():
+                        if payload.get(key) == '' and key not in operation['inputSchema'].get('required', []):
+                            payload.pop(key, None)
+                        elif schema.get('type') == 'integer': payload[key] = int(payload[key])
+                        elif schema.get('type') == 'number': payload[key] = float(payload[key])
+                        elif schema.get('type') in ('object','array'): payload[key] = json.loads(payload[key])
+                    job = runtime.submit(actor, session, operation['id'], payload)
+                    error = ''
+                except Exception as exc: error = str(exc)
+            imgui.end_disabled()
+            if active and imgui.button('Cancel'): runtime.cancel(actor, job['jobId'])
+            if error: imgui.text_wrapped(error)
+            if job:
+                imgui.text(job['state'])
+                imgui.text_wrapped(json.dumps(job.get('outputs') or job.get('error') or job.get('progress'), ensure_ascii=False))
+            if '--smoke-test' in sys.argv and frames > 10: runner.app_shall_exit = True
+        def capture_config():
+            operation=operations[selected]
+            payload=dict(values.get(operation['id'],{}))
+            for key,schema in operation['inputSchema'].get('properties',{}).items():
+                if payload.get(key)=='' and key not in operation['inputSchema'].get('required',[]): payload.pop(key,None)
+                elif key in payload and schema.get('type')=='integer': payload[key]=int(payload[key])
+                elif key in payload and schema.get('type')=='number': payload[key]=float(payload[key])
+                elif key in payload and schema.get('type') in ('object','array') and isinstance(payload[key],str): payload[key]=json.loads(payload[key])
+            return {'operationId':operation['id'],'parameters':payload}
+        def restore_config(value):
+            nonlocal selected
+            selected=next(i for i,op in enumerate(operations) if op['id']==value['operationId'])
+            values[value['operationId']]=dict(value['parameters'])
+        configure_generation(runtime,capture_config,restore_config)
+        runner.callbacks.show_gui = gui
+        run(runner)
+
+if __name__ == '__main__': main()

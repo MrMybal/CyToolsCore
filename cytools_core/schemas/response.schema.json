@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:cytools:v1:response",
+  "type": "object",
+  "properties": {
+    "protocolVersion": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": [
+        "string",
+        "integer",
+        "null"
+      ]
+    },
+    "result": {},
+    "error": {
+      "$ref": "#/$defs/error"
+    }
+  },
+  "required": [
+    "protocolVersion",
+    "id"
+  ],
+  "oneOf": [
+    {
+      "required": [
+        "result"
+      ],
+      "not": {
+        "required": [
+          "error"
+        ]
+      }
+    },
+    {
+      "required": [
+        "error"
+      ],
+      "not": {
+        "required": [
+          "result"
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "technicalDetails": {},
+        "recoverable": {
+          "type": "boolean"
+        },
+        "suggestedAction": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "underlyingError": {}
+      },
+      "required": [
+        "code",
+        "message",
+        "recoverable"
+      ]
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cytools.local/schemas/v1/generation-config.schema.json",
+  "title": "CyTools generation configuration v1",
+  "type": "object",
+  "required": ["format", "schemaVersion", "toolId", "toolVersion", "operationId", "parameters"],
+  "properties": {
+    "format": {"const": "cytools-generation-config"},
+    "schemaVersion": {"const": 1},
+    "toolId": {"type": "string", "minLength": 1},
+    "toolVersion": {"type": "string", "minLength": 1},
+    "operationId": {"type": "string", "minLength": 1},
+    "parameters": {"type": "object"},
+    "backendId": {"type": "string"},
+    "modelId": {"type": "string"},
+    "createdAt": {"type": "string"},
+    "validParameters": {"type": "boolean"},
+    "validationMessage": {"type": "string"},
+    "uiState": {"type": "object"},
+    "jobId": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}
