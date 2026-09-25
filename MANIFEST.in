@@ -1,7 +1,7 @@
 recursive-include Docs *.md
 recursive-include Examples *.py *.cs *.csproj *.md
 recursive-include Tests *.py
-include README.md AGENTS.md
+include README.md AGENTS.md LICENSE
 recursive-include scripts *.py
 prune Examples/DotNetClient/bin
 prune Examples/DotNetClient/obj

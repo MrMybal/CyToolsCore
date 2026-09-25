@@ -85,3 +85,15 @@ Stockage local/partagé et CUDA Toolkit : voir [SharedInstallation.md](Docs/Shar
 Accès avancé et orchestration IA : [contrat de couverture](Docs/FullOperationAccess.md).
 
 Plugins Unreal et connecteurs IA : [CyUEMCPSDK et connecteurs intégrés](Docs/UnrealIntegration.md).
+
+## Licence
+
+Copyright (C) 2026 Cyberalien.
+
+CyToolsCore est distribué sous la **GNU General Public License, version 3 uniquement**
+(`GPL-3.0-only`). Voir le texte complet dans [LICENSE](LICENSE).
+
+Vous pouvez redistribuer et modifier ce programme selon les termes de cette licence.
+Il est fourni sans aucune garantie, notamment sans garantie de qualité marchande ou
+d'adéquation à un usage particulier. Les dépendances et modèles tiers conservent
+leurs licences respectives.
