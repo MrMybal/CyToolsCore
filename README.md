@@ -102,3 +102,6 @@ leurs licences respectives.
 Concurrence ciblée entre opérations : le SDK 0.10.0 permet de déclarer des groupes
 `exclusiveGroups`, notamment pour partager un GPU tout en laissant les opérations
 indépendantes continuer. Voir [Scheduler](Docs/Scheduler.md).
+
+Mise à jour d’un logiciel, Tool ou plugin déjà intégré :
+[guide de migration](Docs/UpdateExistingProducts.md).

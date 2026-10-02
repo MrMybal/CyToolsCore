@@ -24,3 +24,5 @@ Ne pas modifier une installation partagée active.
 
 Les dépôts fournissent les sources et les instructions d’intégration. Conserver les
 textes complets des licences livrées avec chaque composant ; les liens ne les remplacent pas.
+
+Pour mettre à jour un produit déjà intégré, suivre [UpdateExistingProducts.md](UpdateExistingProducts.md).

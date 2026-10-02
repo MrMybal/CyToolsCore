@@ -85,3 +85,7 @@ Appliquer aussi `Docs/Scheduler.md` (SDK 0.10.0 ou ultérieur) : déclarer les g
 la file du SDK et vérifier les priorités, les délais et l'annulation réelle. Les opérations
 indépendantes doivent pouvoir continuer ; ne pas confondre cette coordination locale
 au Runtime avec un verrou entre des processus autonomes.
+
+## Produit déjà intégré
+
+Pour une mise à jour plutôt qu’un nouveau Tool, suivre [UpdateExistingProducts.md](UpdateExistingProducts.md).
