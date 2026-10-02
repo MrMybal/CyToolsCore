@@ -1,6 +1,6 @@
-# État de l'implémentation 0.9.0
+# État de l'implémentation 0.10.0
 
-Le schéma CyTools v1 est la base portable ; le SDK 0.9.0 est son implémentation
+Le schéma CyTools v1 est la base portable ; le SDK 0.10.0 est son implémentation
 de référence. Ce fichier distingue ce qui fonctionne de ce qu'un backend doit fournir.
 
 | Domaine | Livré et exécutable |
@@ -9,7 +9,7 @@ de référence. Ce fichier distingue ce qui fonctionne de ce qu'un backend doit 
 | Validation | Manifest, IDs/références, paramètres conditionnels, defaults, sorties ; métadonnées extensibles |
 | Runtime | Handlers enregistrés, jobs async, priorités, états, progression, erreurs, annulation coopérative, délais queue/exécution |
 | Clients | Jetons aléatoires persistés en empreinte, sessions, workspaces distincts, Owner/Shared/Global et filtrage des événements |
-| Scheduler | Concurrence bornée, politiques de sérialisation, réservation atomique RAM/VRAM/disque/CPU, attente et libération |
+| Scheduler | Concurrence bornée, groupes d’exclusivité par opération, politiques de sérialisation, réservation atomique RAM/VRAM/disque/CPU, attente et libération |
 | Ressources | Détection OS/CPU/RAM/disque, NVIDIA optionnel, estimation personnalisable, CanRun, observations persistées |
 | Backends/modèles | Descripteurs, sélection, catalogues, contrôles de présence et compatibilité ; profils de ressources |
 | Workers | Processus one-shot JSON, arrêt, tentative d'arrêt des descendants, détection de crash, relance, release |
@@ -57,3 +57,13 @@ déjà utiliser le runtime sans réimplémenter validation, jobs, sessions ou tr
 ## Installation partagée (0.4.0)
 
 Cache pip/HF/Torch configurable et cache SHA256 du DownloadManager, verrou interprocessus, référencement de CUDA Toolkit existant avec sélection par Tool et état CLI/MCP. Python et bibliothèques PyTorch restent privés. Aucun installateur CUDA automatique ni migration des poids existants. Voir SharedInstallation.md.
+
+## Statut et groupes d'exclusivité (0.10.0)
+
+GetRuntimeStatus tolère les adaptateurs sans attribut state et distingue les workers
+actifs de ceux dont le statut est inconnu. Les groupes operations[].exclusiveGroups
+sérialisent les opérations concernées dans le scheduler, entre backends et clients,
+sans bloquer les opérations indépendantes. CanRun expose waitingForConcurrency.
+Tests dédiés : API locale, MCP via HTTP, priorités, budgets, groupes multiples,
+annulation différée, délais, erreurs et confidentialité des IDs de réservation.
+Cette version ne fournit pas de verrou GPU global entre processus autonomes.

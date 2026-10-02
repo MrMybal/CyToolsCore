@@ -50,6 +50,9 @@ def test_mcp_real_stdio(tmp_path):
         async with stdio_client(parameters) as (reader,writer):
             async with ClientSession(reader,writer) as session:
                 await session.initialize()
+                status=await session.call_tool('cy_status',{})
+                assert not status.isError,status
+                assert json.loads(status.content[0].text)['unknownWorkers']==0
                 tools=await session.list_tools()
                 assert 'op_echo' in {t.name for t in tools.tools}
                 by_name={t.name:t for t in tools.tools}

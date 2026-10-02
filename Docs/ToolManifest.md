@@ -21,3 +21,8 @@ Les paramètres métier peuvent au contraire refuser les champs inconnus avec
 additionalProperties:false. Version majeure incompatible → IncompatibleVersion.
 Ne pas placer de clés API, jetons, comptes utilisateur ou chemins privés de développeur
 dans un manifest distribuable.
+
+Depuis le SDK 0.10.0, `operations[].exclusiveGroups` est un tableau optionnel d'IDs
+uniques. Les opérations partageant un groupe ne s'exécutent pas simultanément dans
+le même Runtime. Les anciens manifestes sans ce champ gardent leur comportement.
+Voir [Scheduler.md](Scheduler.md) avant de remplacer une file GPU interne.

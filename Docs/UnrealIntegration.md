@@ -11,3 +11,11 @@ Unreal assets integrated into a project remain persistent project changes.
 Provider transports are included in the SDK; CyAIConnectorLab is not a dependency.
 External MCP access and embedded assistant tool access require separate integration
 and validation. See the SDK validation guide for Windows Editor 5.3–5.8 coverage.
+
+The optional Unreal assistant can ship one offline ZIP containing portable Python,
+its official Core wheel and companion dependencies. Follow the SDK's
+Docs/AssistantRuntime.md: background detection, explicit first-use installation,
+shared user storage by default and optional plugin-local storage. Only immutable,
+compatible bundles are shared; plugin sessions, settings and task files stay isolated.
+This assistant-specific policy does not change private Python environments for
+inference CyTools.

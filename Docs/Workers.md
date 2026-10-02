@@ -37,3 +37,18 @@ Pour les modèles persistants, Never/AfterJob/After1Minute/After5Minutes/After15
 WhenResourcesNeeded/Custom sont des politiques décrites dans le manifest, dont
 l'application temporelle relève de l'adaptateur. La V1 ne prétend pas les appliquer
 à un modèle arbitraire sans son code de déchargement.
+
+## Statut des adaptateurs personnalisés
+
+`GetRuntimeStatus` accepte les workers enregistrés sans attribut `state`. Le SDK observe
+leur `process.poll()` s'il existe, sinon un état de cycle de vie connu. À défaut, il peut
+utiliser `health()` avec un booléen `alive` ou `loaded`, ou un champ `state`.
+Une observation de processus vivant reste active même si le dernier état était `Failed`.
+Sans processus vivant, `Stopped` et `Failed` ne sont pas comptés comme actifs.
+
+`runningWorkers` compte les workers observés actifs. `unknownWorkers` compte ceux dont
+le statut ne peut pas être déterminé, y compris les adaptateurs dont l'observateur échoue.
+Les adaptateurs doivent fournir des observations rapides et sans effet métier.
+Les appels à leurs observateurs sont effectués hors du verrou du scheduler ; les métriques
+sont un instantané indicatif, pas une barrière de synchronisation. Le statut ne libère
+aucune réservation et ne publie ni PID, ni détails de modèle, ni erreur d'adaptateur.

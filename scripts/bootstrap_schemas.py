@@ -43,7 +43,9 @@ defs['output'] = obj({'id':ID, 'type': S, 'description':S, 'optional':B, 'mimeTy
 defs['operation'] = obj({'id':ID, 'name':S, 'description':S, 'inputSchema':ref('parameter'), 'outputSchema':ref('parameter'),
     'outputs':array(ref('output')), 'supportedBackends':array(ID), 'resourceRequirements':ref('resources'), 'permissions':array(S),
     'platforms':array(ref('platform')), 'canRunAsync':B, 'canCancel':B, 'supportsProgress':B, 'supportsPreview':B,
-    'supportsStreaming':B, 'estimatedDurationSeconds':N}, ['id','name','description','inputSchema','outputSchema'])
+    'supportsStreaming':B, 'estimatedDurationSeconds':N,
+    'exclusiveGroups':{'type':'array','items':ID,'uniqueItems':True,
+        'description':'Runtime-local mutual exclusion groups. Operations sharing any group cannot execute concurrently. Groups remain held through cancellation until execution and cleanup finish. Requires SDK 0.10.0 or later.'}}, ['id','name','description','inputSchema','outputSchema'])
 defs['error'] = obj({'code': S, 'message':S, 'technicalDetails':{}, 'recoverable':B, 'suggestedAction':{'type':['string','null']}, 'underlyingError':{}}, ['code','message','recoverable'])
 defs['progress'] = obj({'percent':{'type':'number','minimum':0,'maximum':100}, 'currentStep':S, 'currentStepIndex':I, 'stepCount':I,
     'etaSeconds':N, 'currentFile':S, 'previewAvailable':B, 'statusMessage':S})

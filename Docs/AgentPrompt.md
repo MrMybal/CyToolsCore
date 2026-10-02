@@ -79,3 +79,9 @@ avec ressources et exécution cohérentes. Conserver ces sélections dans Save/L
 
 
 Lire [FullOperationAccess.md](FullOperationAccess.md) : inventaire des capacités natives, parité complète des options métier entre IA et standalone, contrats de sorties composables et preuves de validation. Un formulaire simplifié ne limite pas le contrat du Tool.
+
+Appliquer aussi `Docs/Scheduler.md` (SDK 0.10.0 ou ultérieur) : déclarer les groupes
+`exclusiveGroups` des opérations qui doivent partager un GPU sans concurrence, utiliser
+la file du SDK et vérifier les priorités, les délais et l'annulation réelle. Les opérations
+indépendantes doivent pouvoir continuer ; ne pas confondre cette coordination locale
+au Runtime avec un verrou entre des processus autonomes.

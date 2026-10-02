@@ -59,3 +59,12 @@ Lire Docs/AutomaticInputs.md (AutomaticInputs.md depuis Docs) : chemins absolus 
 ## Task-owned files (SDK 0.9.0)
 
 Read Docs/TaskFiles.md (TaskFiles.md from this Docs directory). Configure input roots and all file fields for automatic imports; AI sessions are temporary by default. FinishTask removes imported copies and generated workspaces after workers stop; export wanted results first. Standalone sessions explicitly use temporary=False.
+
+## Operation exclusion groups (SDK 0.10.0)
+
+Read Docs/Scheduler.md. Declare operations[].exclusiveGroups for operations that must
+serialize, including conflicting model maintenance. Use the SDK queue and keep RAM/VRAM
+estimates; do not add another in-handler queue for the same Runtime. Test independent
+operations and hold exclusion until execution/cleanup actually stops on cancellation.
+Groups are runtime-local; keep interprocess locks when separate runtimes need them.
+Require SDK 0.10.0 or later; older SDKs do not enforce this field.

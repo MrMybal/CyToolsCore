@@ -213,6 +213,15 @@
         "estimatedDurationSeconds": {
           "type": "number",
           "minimum": 0
+        },
+        "exclusiveGroups": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$"
+          },
+          "uniqueItems": true,
+          "description": "Runtime-local mutual exclusion groups. Operations sharing any group cannot execute concurrently. Groups remain held through cancellation until execution and cleanup finish. Requires SDK 0.10.0 or later."
         }
       },
       "required": [

@@ -28,7 +28,7 @@ restent concurrents. Pas de batch JSON-RPC implicite : c'est le protocole CyTool
 | GetRuntimeStatus | {} | métriques et budget |
 | GetSystemResources | {} | mesures système |
 | EstimateResources | operationId, parameters, backendId?, modelId? | estimation |
-| CanRun | mêmes champs | canRun, status, estimate, waitingForResources |
+| CanRun | mêmes champs | canRun, status, estimate, waitingForResources, waitingForConcurrency |
 | Diagnose | {} | système et handlers |
 | CreateSession | temporary? (true), retentionSeconds? (3600) | sessionId, clientId, createdAt, closed, temporary, expiresAt |
 | CloseSession | sessionId | session fermée ; Busy si jobs actifs |
@@ -53,3 +53,18 @@ Un client ne fournit ni chemin de workspace ni identité propriétaire dans Subm
 ## Temporary tasks (SDK 0.9.0)
 
 See [TaskFiles.md](TaskFiles.md). ImportFile(sessionId, source, companions?) returns an automatically staged path. ExportJob(jobId, destination) preserves a bundle outside the runtime. FinishTask(sessionId, cancelRunning?) removes task artifacts after workers stop; KeepTaskAlive(sessionId) renews idle retention. CloseSession also cleans temporary tasks. MCP exposes cy_import_file, cy_export_job, cy_finish_task, cy_begin_task and cy_keep_task_alive.
+
+## Statut et attente de concurrence (SDK 0.10.0)
+
+`GetRuntimeStatus` retourne `toolId`, `activeClients`, `activeSessions`, `queuedJobs`,
+`runningJobs`, `runningWorkers`, `unknownWorkers`, `resources` et `acceptingJobs`.
+`resources` contient `capacity` et `available` ; les IDs de réservation restent privés.
+Les compteurs sont globaux au Runtime et n'exposent pas les jobs d'un autre client.
+Un worker personnalisé non observable augmente `unknownWorkers` au lieu de faire échouer
+la requête entière. Voir [Workers.md](Workers.md).
+
+`CanRun.waitingForConcurrency` complète `waitingForResources` lorsque `canRun` vaut true.
+Il couvre les groupes d'exclusivité, les règles du backend et le plafond global de handlers.
+Les groupes sont visibles dans `DescribeTool`, `ListOperations` et `DescribeOperation` via
+`operations[].exclusiveGroups`. Les adaptateurs CLI, HTTP et MCP utilisent ce même contrat.
+Voir [Scheduler.md](Scheduler.md) pour la déclaration et la portée des groupes.

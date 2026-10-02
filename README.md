@@ -2,7 +2,7 @@
 
 Socle autonome pour créer des CyTools : standard JSON v1, SDK/runtime Python,
 jobs, sessions, isolation des clients, réservation de ressources et adaptateurs
-CLI, JSONL, HTTP local et MCP. Version du SDK : **0.9.0** ; schéma : **1** ; protocole : **1.0**.
+CLI, JSONL, HTTP local et MCP. Version du SDK : **0.10.0** ; schéma : **1** ; protocole : **1.0**.
 
 Chaque Tool embarque ou référence ce SDK. Aucun CyToolsManager, modèle IA,
 compte fournisseur ou composant graphique n'est nécessaire.
@@ -97,3 +97,7 @@ Vous pouvez redistribuer et modifier ce programme selon les termes de cette lice
 Il est fourni sans aucune garantie, notamment sans garantie de qualité marchande ou
 d'adéquation à un usage particulier. Les dépendances et modèles tiers conservent
 leurs licences respectives.
+
+Concurrence ciblée entre opérations : le SDK 0.10.0 permet de déclarer des groupes
+`exclusiveGroups`, notamment pour partager un GPU tout en laissant les opérations
+indépendantes continuer. Voir [Scheduler](Docs/Scheduler.md).

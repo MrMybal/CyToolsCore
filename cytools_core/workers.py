@@ -7,6 +7,42 @@ import psutil
 from .errors import CyToolError
 
 
+_ACTIVE_STATES = frozenset({'Starting', 'Idle', 'Loading', 'Ready', 'Busy', 'Unloading', 'Stopping'})
+_INACTIVE_STATES = frozenset({'Stopped', 'Failed'})
+_MISSING = object()
+
+
+def worker_activity(worker):
+    """Return True/False when observable, None for an unknown adapter status.
+
+    Prefer cheap process/state observations: custom health() may acquire its own
+    locks or perform maintenance. Call this outside the runtime scheduler lock.
+    """
+    try:
+        process = getattr(worker, 'process', _MISSING)
+        if process is not _MISSING and process is not None:
+            return process.poll() is None
+        state = getattr(worker, 'state', None)
+        if state in _ACTIVE_STATES:
+            return True
+        if state in _INACTIVE_STATES or process is None:
+            return False
+        health = getattr(worker, 'health', None)
+        details = health() if callable(health) else None
+        if isinstance(details, dict):
+            for flag in ('alive', 'loaded'):
+                if type(details.get(flag)) is bool:
+                    return details[flag]
+            if details.get('state') in _ACTIVE_STATES:
+                return True
+            if details.get('state') in _INACTIVE_STATES:
+                return False
+    except Exception:
+        # A third-party observer must not break the status of the entire Tool.
+        pass
+    return None
+
+
 class ProcessWorker:
     def __init__(self, command, *, cwd=None, startup_timeout=10, idle_timeout=60):
         if not command or not all(isinstance(arg,str) for arg in command):

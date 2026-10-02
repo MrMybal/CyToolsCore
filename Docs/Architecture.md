@@ -43,3 +43,13 @@ Au redémarrage, les jobs non terminaux deviennent Failed/Interrupted. Ils ne so
 relancés automatiquement : un effet externe pourrait sinon être exécuté deux fois.
 Les réservations sont reconstruites vides ; les modèles persistants doivent être
 réenregistrés par leurs adaptateurs. Les événements sont un buffer borné en mémoire.
+
+Les opérations peuvent déclarer `exclusiveGroups`. Le scheduler compare leurs groupes
+à ceux de tous les jobs dans `_running`, sous la même Condition que les réservations.
+Aucun groupe n'est pris partiellement et aucune attente n'occupe un thread de handler.
+L'entrée dans `_running` précède le lancement ; sa sortie suit l'exécution et le nettoyage,
+y compris après une annulation. Cette coordination est locale au Runtime.
+
+Les métriques du runtime sont copiées sous ce verrou ; les observations des adaptateurs
+workers sont réalisées ensuite, afin de ne pas inverser leurs propres verrous avec celui
+du scheduler. Un statut inconnu est signalé explicitement par `unknownWorkers`.

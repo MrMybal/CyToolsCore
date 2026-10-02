@@ -119,6 +119,10 @@ class JobContext:
 class Runtime:
     def __init__(self, descriptor, data_dir, *, capacity=None, system=None, event_limit=2000):
         self.descriptor = validate_manifest(descriptor)
+        self._operation_groups = {
+            op['id']: frozenset(op.get('exclusiveGroups', []))
+            for op in self.descriptor['operations']
+        }
         self.root = Path(data_dir).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
         # Lifetime lock prevents two schedulers sharing a database/workspace root.
@@ -177,6 +181,12 @@ class Runtime:
             if self._started: return self
             missing = {o['id'] for o in self.descriptor['operations']} - self._handlers.keys()
             if missing: raise CyToolError('MissingImplementation',f'Missing handlers: {sorted(missing)}')
+            # Extensions may add operations after construction, before start().
+            self.descriptor = validate_manifest(self.descriptor)
+            self._operation_groups = {
+                op['id']: frozenset(op.get('exclusiveGroups', []))
+                for op in self.descriptor['operations']
+            }
             self._started = True
             self._scheduler = threading.Thread(target=self._schedule, name='CyToolsScheduler', daemon=True)
             self._scheduler.start()
@@ -350,8 +360,12 @@ class Runtime:
                     raise CyToolError('UnsupportedGPU','Requested compute backend is not detected')
             shortage = self.ledger.shortage(self.ledger.normalize(estimate), self.ledger.capacity)
             if shortage: raise CyToolError(shortage,'Requested resources exceed the configured capacity')
-            waiting = self.ledger.shortage(self.ledger.normalize(estimate), self.ledger.snapshot()['available']) is not None
-            return {'status':'CanRun','canRun':True,'waitingForResources':waiting,'estimate':estimate,
+            with self._cv:
+                waiting = self.ledger.shortage(self.ledger.normalize(estimate), self.ledger.snapshot()['available']) is not None
+                waiting_concurrency = not self._can_dispatch({
+                    'operationId': operation_id, 'backendId': (backend or {}).get('id', '')})
+            return {'status':'CanRun','canRun':True,'waitingForResources':waiting,
+                    'waitingForConcurrency':waiting_concurrency,'estimate':estimate,
                     'platformStatus':'Experimental' if 'Experimental' in statuses else 'Supported', 'suggestions':[]}
         except CyToolError as exc:
             return {'status':exc.code,'canRun':False,'error':exc.to_dict(),'suggestions':[]}
@@ -470,6 +484,10 @@ class Runtime:
         maximum = self.descriptor['concurrency'].get('maxWorkers',1)
         if len(self._running)>=maximum: return False
         if policy in ('Exclusive','Sequential') and self._running: return False
+        groups = self._operation_groups.get(job['operationId'], frozenset())
+        if groups and any(groups & self._operation_groups[self._jobs[j]['operationId']]
+                          for j in self._running):
+            return False
         peers = [self._jobs[j] for j in self._running if self._jobs[j]['backendId']==job['backendId']]
         if policy=='SharedModelSequential' and peers: return False
         if job['backendId'] and peers:
@@ -564,11 +582,19 @@ class Runtime:
                 self._cv.wait(min(remaining,.05))
 
     def status(self):
+        from .workers import worker_activity
         with self._cv:
-            return {'toolId':self.descriptor['id'],'activeClients':len({s['clientId'] for s in self._sessions.values() if not s['closed']}),
-                    'activeSessions':sum(not s['closed'] for s in self._sessions.values()), 'queuedJobs':len(self._queue),
-                    'runningJobs':len(self._running),'runningWorkers':sum(w.state!='Stopped' for w in self._workers.values()),
-                    'resources':self.ledger.snapshot(),'acceptingJobs':self._started and not self._closed}
+            workers = list(self._workers.values())
+            status = {'toolId':self.descriptor['id'],'activeClients':len({s['clientId'] for s in self._sessions.values() if not s['closed']}),
+                      'activeSessions':sum(not s['closed'] for s in self._sessions.values()),
+                      'queuedJobs':sum(j not in self._running and self._jobs[j]['state'] not in TERMINAL for _,j in self._queue),
+                      'runningJobs':len(self._running),'resources':self.ledger.snapshot(),
+                      'acceptingJobs':self._started and not self._closed}
+        # Adapter callbacks can take locks of their own; never hold _cv here.
+        activity = [worker_activity(worker) for worker in workers]
+        status.update(runningWorkers=sum(value is True for value in activity),
+                      unknownWorkers=sum(value is None for value in activity))
+        return status
 
     def register_worker(self, worker_id, worker):
         with self._cv:

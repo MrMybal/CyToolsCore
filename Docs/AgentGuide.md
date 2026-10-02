@@ -177,3 +177,14 @@ Lire Docs/AutomaticInputs.md (AutomaticInputs.md depuis Docs) : chemins absolus 
 ## Task-owned files (SDK 0.9.0)
 
 Read Docs/TaskFiles.md (TaskFiles.md from this Docs directory). Configure input roots and all file fields for automatic imports; AI sessions are temporary by default. FinishTask removes imported copies and generated workspaces after workers stop; export wanted results first. Standalone sessions explicitly use temporary=False.
+
+## Partager un GPU entre plusieurs opérations (SDK 0.10.0)
+
+Lire [Scheduler.md](Scheduler.md). Déclarer `exclusiveGroups: ["gpu"]` dans toutes les
+opérations qui utilisent un même moteur non concurrent, y compris ses opérations de
+chargement/déchargement quand elles peuvent entrer en conflit. Configurer `concurrency`
+pour laisser les opérations indépendantes progresser. Ne pas créer une seconde file
+locale dans les handlers ; conserver les réservations RAM/VRAM et les contraintes backend.
+Épingler le SDK 0.10.0 ou ultérieur et tester deux clients, une opération indépendante,
+les priorités, les délais, l'échec et une annulation avant l'arrêt réel du worker.
+Les groupes ne coordonnent pas des processus Runtime différents.
