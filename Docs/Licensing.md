@@ -16,3 +16,11 @@ reconstruire les bundles et conserver les notices des composants. Modifier seule
 la licence du dépôt ne met pas à jour un ancien wheel, un ZIP ou un runtime installé.
 Pour Unreal, utiliser CyUEMCPSDK 0.1.8 ou ultérieur et Docs/UpdateAssistantRuntime.md.
 Ne pas modifier une installation partagée active.
+
+## Dépôts sources
+
+- CyToolsCore: https://github.com/MrMybal/CyToolsCore
+- CyUEMCPSDK: https://github.com/MrMybal/CyUEMCPSDK
+
+Les dépôts fournissent les sources et les instructions d’intégration. Conserver les
+textes complets des licences livrées avec chaque composant ; les liens ne les remplacent pas.
