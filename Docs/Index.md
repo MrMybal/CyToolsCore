@@ -23,3 +23,4 @@
 
 - [Fonctionnalités livrées](ImplementationStatus.md).
 - [Résultats de validation](Validation.md).
+- [Licence MIT et redistribution](Licensing.md).

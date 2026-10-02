@@ -68,7 +68,7 @@ les groupes ne chargent ni ne déchargent automatiquement ce modèle.
 Pour migrer une file GPU interne, installer le SDK 0.10.0 ou ultérieur, déclarer les
 mêmes groupes sur toutes les opérations concernées avant de démarrer le Runtime, puis
 soumettre normalement les jobs via SDK/CLI/HTTP/MCP. Vérifier concurrence et annulation
-avant de retirer l'ancienne file. Le scaffold 0.10.0 épingle cette version dans ses dépendances.
+avant de retirer l'ancienne file. Le scaffold 0.10.1 épingle le SDK 0.10.1 dans ses dépendances.
 Les anciens SDK peuvent conserver un champ inconnu sans appliquer son comportement :
 il ne suffit pas de modifier le manifeste sans mettre à jour le SDK.
 

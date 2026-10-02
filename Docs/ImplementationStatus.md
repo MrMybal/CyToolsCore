@@ -1,6 +1,6 @@
-# État de l'implémentation 0.10.0
+# État de l'implémentation 0.10.1
 
-Le schéma CyTools v1 est la base portable ; le SDK 0.10.0 est son implémentation
+Le schéma CyTools v1 est la base portable ; le SDK 0.10.1 est son implémentation
 de référence. Ce fichier distingue ce qui fonctionne de ce qu'un backend doit fournir.
 
 | Domaine | Livré et exécutable |

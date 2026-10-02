@@ -2,7 +2,7 @@
 
 Socle autonome pour créer des CyTools : standard JSON v1, SDK/runtime Python,
 jobs, sessions, isolation des clients, réservation de ressources et adaptateurs
-CLI, JSONL, HTTP local et MCP. Version du SDK : **0.10.0** ; schéma : **1** ; protocole : **1.0**.
+CLI, JSONL, HTTP local et MCP. Version du SDK : **0.10.1** ; schéma : **1** ; protocole : **1.0**.
 
 Chaque Tool embarque ou référence ce SDK. Aucun CyToolsManager, modèle IA,
 compte fournisseur ou composant graphique n'est nécessaire.
@@ -90,10 +90,11 @@ Plugins Unreal et connecteurs IA : [CyUEMCPSDK et connecteurs intégrés](Docs/U
 
 Copyright (C) 2026 Cyberalien.
 
-CyToolsCore est distribué sous la **GNU General Public License, version 3 uniquement**
-(`GPL-3.0-only`). Voir le texte complet dans [LICENSE](LICENSE).
+CyToolsCore est distribué sous la **licence MIT** à partir de la version 0.10.1.
+Voir [LICENSE](LICENSE) et les règles de redistribution dans [Docs/Licensing.md](Docs/Licensing.md).
 
-Vous pouvez redistribuer et modifier ce programme selon les termes de cette licence.
+Vous pouvez utiliser, modifier et redistribuer le SDK, y compris dans des produits
+commerciaux, en conservant le texte de licence et la mention de copyright.
 Il est fourni sans aucune garantie, notamment sans garantie de qualité marchande ou
 d'adéquation à un usage particulier. Les dépendances et modèles tiers conservent
 leurs licences respectives.

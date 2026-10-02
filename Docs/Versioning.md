@@ -1,7 +1,7 @@
 # Versions et compatibilité
 
 Trois versions indépendantes : schemaVersion entier (1), protocolVersion major.minor
-(1.0), version métier de chaque Tool. La version du paquet SDK est 0.10.0 ; le schéma reste en version 1 et le protocole en 1.0.
+(1.0), version métier de chaque Tool. La version du paquet SDK est 0.10.1 ; le schéma reste en version 1 et le protocole en 1.0.
 
 Le parser conserve les métadonnées inconnues et refuse un major schema/protocol
 incompatible. Les opérations et paramètres n'ont pas à accepter des champs inconnus :
@@ -25,3 +25,8 @@ erreurs ou garanties d'identité. Porter les fixtures et les tests du protocole.
 - Les groupes suivent les priorités, budgets, délais et annulations du scheduler commun.
 - Les manifestes sans groupes gardent leurs règles de concurrence. Le schéma 1 et le
   protocole 1.0 sont conservés ; la nouvelle garantie nécessite le SDK 0.10.0 ou ultérieur.
+
+## SDK 0.10.1
+
+Distribution MIT et notices de redistribution ; aucun changement du contrat JSON,
+du protocole ou du comportement du runtime par rapport à 0.10.0.

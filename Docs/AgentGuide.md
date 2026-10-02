@@ -188,3 +188,7 @@ locale dans les handlers ; conserver les réservations RAM/VRAM et les contraint
 Épingler le SDK 0.10.0 ou ultérieur et tester deux clients, une opération indépendante,
 les priorités, les délais, l'échec et une annulation avant l'arrêt réel du worker.
 Les groupes ne coordonnent pas des processus Runtime différents.
+
+
+Licence et redistribution commerciale : lire [Licensing.md](Licensing.md).
+Conserver les notices MIT du SDK et les licences distinctes des composants tiers.
