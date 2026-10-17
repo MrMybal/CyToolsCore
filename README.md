@@ -4,16 +4,19 @@
   <img src="Assets/Branding/cytoolscore-logo-blue-outline-tools.png" alt="CyToolsCore logo" width="160">
 </p>
 
-Socle autonome pour créer des CyTools : standard JSON v1, SDK/runtime Python,
-jobs, sessions, isolation des clients, réservation de ressources et adaptateurs
-CLI, JSONL, HTTP local et MCP. Version du SDK : **0.10.1** ; schéma : **1** ; protocole : **1.0**.
+**English** | [Français](README.fr.md)
 
-Chaque Tool embarque ou référence ce SDK. Aucun CyToolsManager, modèle IA,
-compte fournisseur ou composant graphique n'est nécessaire.
+A standalone foundation for building CyTools: the CyTools JSON v1 standard,
+a Python SDK and runtime, jobs, sessions, client isolation, resource reservations,
+and CLI, JSONL, local HTTP and MCP adapters. SDK version: **0.10.1**; schema: **1**;
+protocol: **1.0**.
 
-## Démarrer sous Windows
+Each Tool embeds or references this SDK. CyToolsManager, AI models, provider accounts
+and graphical components are not required.
 
-Depuis ce dossier, avec Python 3.11 ou plus récent :
+## Getting started on Windows
+
+From this directory, with Python 3.11 or later:
 
 ```powershell
 python -m venv .venv
@@ -23,10 +26,10 @@ python -m venv .venv
 .\.venv\Scripts\cytool-test invoke progress_test
 ```
 
-Sous Linux/macOS, remplacer `.venv\Scripts\` par `.venv/bin/`.
-L'extra `mcp` est optionnel ; `pip install -e .` suffit pour le runtime et la CLI.
+On Linux/macOS, replace `.venv\Scripts\` with `.venv/bin/`.
+The `mcp` extra is optional; `pip install -e .` is enough for the runtime and CLI.
 
-## Créer un Tool
+## Creating a Tool
 
 ```powershell
 .\.venv\Scripts\cytools new .\Examples\CyToolSample --name CyToolSample --id cy.tool.sample --desktop
@@ -34,78 +37,74 @@ L'extra `mcp` est optionnel ; `pip install -e .` suffit pour le runtime et la CL
 .\.venv\Scripts\python .\Examples\CyToolSample\app\tool.py invoke echo --params-file .\Examples\CyToolSample\app\params.json
 ```
 
-Le mode `--desktop` fournit une racine `app/data/runtime`, une façade ImGui et les sources
-du lanceur natif à compiler. Il reste à finaliser l’interface métier, l’installation et
-les mises à jour selon [StandaloneDelivery](Docs/StandaloneDelivery.md).
-L'onglet Options fournit anglais/francais, theme, taille du texte, licences et sauvegardes
-de configurations de generation reutilisables par les clients IA.
+The `--desktop` option provides an `app/data/runtime` layout, an ImGui frontend and
+native launcher sources to compile. Complete the Tool's interface, installation and
+updates according to [Standalone delivery](Docs/StandaloneDelivery.md).
+The Options tab includes English/French selection, theme, text size, licenses and
+generation configurations that AI clients can save and reuse.
 
-Pour un Tool de maillage, ajouter `--mesh-viewer` : aperçu interactif des résultats,
-navigation orbitale/libre, zoom rapproché et éclairages studio/soleil. Voir
-[Visualisation 3D](Docs/MeshViewer.md) pour l'intégration et les contrôles requis.
+For mesh Tools, add `--mesh-viewer`: interactive result previews, orbit/free navigation,
+close-up zoom and studio/sun lighting. See [Mesh viewer](Docs/MeshViewer.md) for
+integration instructions and required controls.
 
-Le générateur refuse d'écraser un dossier non vide. Il crée `CyTool.json`, `tool.py`,
-`test_tool.py`, `AGENTS.md`, `README.md`, `params.json` et les indications d'installation.
-Il fournit aussi `CyToolsGuide.md` et une copie de la documentation du SDK.
-`cytools docs` retrouve la documentation complète installée, y compris depuis un wheel.
-Le Tool dispose immédiatement des commandes `describe`, `list-operations`, `invoke`,
-`diagnose`, `stdio`, `serve`, `create-client` et `mcp`.
+The generator refuses to overwrite a non-empty directory. It creates `CyTool.json`,
+`tool.py`, `test_tool.py`, `AGENTS.md`, `README.md`, `params.json` and installation
+instructions. It also provides `CyToolsGuide.md` and a copy of the SDK documentation.
+`cytools docs` locates the complete installed documentation, including when installed
+from a wheel. The Tool immediately supports `describe`, `list-operations`, `invoke`,
+`diagnose`, `stdio`, `serve`, `create-client` and `mcp`.
 
-**Pour une IA qui doit créer un Tool : commencer par [Docs/AgentGuide.md](Docs/AgentGuide.md).**
-Le [prompt prêt à copier](Docs/AgentPrompt.md) fournit un point d'entrée indépendant
-du client IA utilisé. Le tutoriel humain est [CreatingYourFirstCyTool](Docs/CreatingYourFirstCyTool.md).
+**For an AI agent creating a Tool, start with [Docs/AgentGuide.md](Docs/AgentGuide.md).**
+The [ready-to-use prompt](Docs/AgentPrompt.md) provides an entry point independent of
+the AI client. The human tutorial is [Creating your first CyTool](Docs/CreatingYourFirstCyTool.md).
+Some detailed guides are currently available in French.
 
-Les standalones disposent d’un journal sélectionnable/copiable et de contrats pour
-la résolution vidéo, les modèles dérivés, les LoRA et le choix CPU/GPU : voir
-[Journaux et modèles](Docs/StandaloneDiagnosticsAndModels.md).
+Standalone applications include selectable/copyable logs and contracts for video
+resolution, derived models, LoRA adapters and CPU/GPU selection: see
+[Standalone diagnostics and models](Docs/StandaloneDiagnosticsAndModels.md).
 
-## Organisation
+## Project layout
 
-| Dossier | Rôle |
+| Directory | Purpose |
 |---|---|
-| `cytools_core/schemas/` | Contrats JSON Schema 2020-12, source de vérité du standard |
-| `cytools_core/` | Validation, runtime, stockage, ressources, workers, téléchargements |
-| `cytools_core/transports/` | Façades séparées ; même identité et même runtime |
-| `cytool_test/` | Tool de référence avec sept opérations sans IA |
-| `Tests/` | Tests d'intégration, concurrence, téléchargements, workers, HTTP et MCP réel |
-| `Docs/` | Contrat, tutoriel, guide IA, limites et décisions d'architecture |
-| `Examples/` | Exemples de clients et de worker portable |
+| `cytools_core/schemas/` | JSON Schema 2020-12 contracts, the source of truth for the standard |
+| `cytools_core/` | Validation, runtime, storage, resources, workers and downloads |
+| `cytools_core/transports/` | Separate adapters using the same identity and runtime |
+| `cytool_test/` | Reference Tool with seven operations and no AI dependency |
+| `Tests/` | Integration, concurrency, download, worker, HTTP and real MCP tests |
+| `Docs/` | Contract, tutorial, agent guide, limitations and architecture decisions |
+| `Examples/` | Client and portable worker examples |
 
-Voir [l'état des fonctionnalités](Docs/ImplementationStatus.md) et
-[le compte rendu de validation](Docs/Validation.md) avant une intégration métier.
-Les SDK natifs C++/C# ne sont pas livrés : ces langages peuvent déjà utiliser le protocole
-JSON ou être exécutés comme workers. Linux/macOS disposent d'une matrice CI ; un test
-local Windows ne constitue pas une validation exécutée sur ces plateformes.
+Read the [implementation status](Docs/ImplementationStatus.md) and
+[validation report](Docs/Validation.md) before integrating a backend.
+Native C++/C# SDKs are not shipped: those languages can already use the JSON protocol
+or run as workers. Linux/macOS have a CI matrix; a local Windows test does not establish
+that validation has run on those platforms.
 
-## Premier modèle testé : CLAP
+## First tested model: CLAP
 
-[CyToolCLAP](Tools/CyToolCLAP/README.md) est un Tool séparé pour classer sons et musique
-avec un modèle local. Quatre extraits publics (chien, pluie, trompette, piano) ont été
-testés, ainsi qu'une inférence par MCP. Ses dépendances et poids restent hors du Core.
+[CyToolCLAP](Tools/CyToolCLAP/README.md) is a separate Tool for classifying sounds and
+music with a local model. Four public samples (dog, rain, trumpet and piano) were
+tested, along with inference through MCP. Its dependencies and weights stay outside
+the Core.
 
-Stockage local/partagé et CUDA Toolkit : voir [SharedInstallation.md](Docs/SharedInstallation.md).
+## Additional guides
 
+- Local/shared storage and CUDA Toolkit: [Shared installation](Docs/SharedInstallation.md).
+- Advanced access and AI orchestration: [Full operation access](Docs/FullOperationAccess.md).
+- Unreal plugins and AI connectors: [CyUEMCPSDK and integrated connectors](Docs/UnrealIntegration.md).
+- Targeted operation concurrency: SDK 0.10.0 introduced `exclusiveGroups`, for example
+  to share a GPU while independent operations keep running. See [Scheduler](Docs/Scheduler.md).
+- Updating an existing application, Tool or plugin: [Migration guide](Docs/UpdateExistingProducts.md).
 
-Accès avancé et orchestration IA : [contrat de couverture](Docs/FullOperationAccess.md).
-
-Plugins Unreal et connecteurs IA : [CyUEMCPSDK et connecteurs intégrés](Docs/UnrealIntegration.md).
-
-## Licence
+## License
 
 Copyright (C) 2026 Cyberalien.
 
-CyToolsCore est distribué sous la **licence MIT** à partir de la version 0.10.1.
-Voir [LICENSE](LICENSE) et les règles de redistribution dans [Docs/Licensing.md](Docs/Licensing.md).
+CyToolsCore is distributed under the **MIT license** starting with version 0.10.1.
+See [LICENSE](LICENSE) and the redistribution rules in [Docs/Licensing.md](Docs/Licensing.md).
 
-Vous pouvez utiliser, modifier et redistribuer le SDK, y compris dans des produits
-commerciaux, en conservant le texte de licence et la mention de copyright.
-Il est fourni sans aucune garantie, notamment sans garantie de qualité marchande ou
-d'adéquation à un usage particulier. Les dépendances et modèles tiers conservent
-leurs licences respectives.
-
-Concurrence ciblée entre opérations : le SDK 0.10.0 permet de déclarer des groupes
-`exclusiveGroups`, notamment pour partager un GPU tout en laissant les opérations
-indépendantes continuer. Voir [Scheduler](Docs/Scheduler.md).
-
-Mise à jour d’un logiciel, Tool ou plugin déjà intégré :
-[guide de migration](Docs/UpdateExistingProducts.md).
+You may use, modify and redistribute the SDK, including in commercial products,
+provided you retain the license text and copyright notice.
+It is provided without warranty, including any warranty of merchantability or fitness
+for a particular purpose. Third-party dependencies and models retain their own licenses.
