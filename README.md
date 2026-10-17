@@ -1,5 +1,9 @@
 # CyToolsCore
 
+<p align="center">
+  <img src="Assets/Branding/cytoolscore-logo-blue-outline-tools.png" alt="CyToolsCore logo" width="160">
+</p>
+
 Socle autonome pour créer des CyTools : standard JSON v1, SDK/runtime Python,
 jobs, sessions, isolation des clients, réservation de ressources et adaptateurs
 CLI, JSONL, HTTP local et MCP. Version du SDK : **0.10.1** ; schéma : **1** ; protocole : **1.0**.
