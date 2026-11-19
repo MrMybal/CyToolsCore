@@ -52,3 +52,12 @@ Lire Docs/AutomaticInputs.md (AutomaticInputs.md depuis Docs) : chemins absolus 
 Read Docs/TaskFiles.md (TaskFiles.md from this Docs directory). Configure input roots and all file fields for automatic imports; AI sessions are temporary by default. FinishTask removes imported copies and generated workspaces after workers stop; export wanted results first. Standalone sessions explicitly use temporary=False.
 
 For an existing product migration, read Docs/UpdateExistingProducts.md first: backup commit, actual MIT packages, root LICENCES with GitHub links, project-specific adaptation and validation of the delivered product.
+
+
+## Native communication (0.11.0)
+
+Read Docs/NativeCommunication.md. MCP, communication CLI, JSONL, HTTP and native
+communication SDK use CyMCPSDK C++ through Native/. Python transports are thin
+compatibility bindings, never parallel implementations. Keep Tool runtime logic
+and the portable JSON schemas. Do not add a Python MCP runtime fallback. Build
+Native/ before source transport tests and platform wheel packaging.

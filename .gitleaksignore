@@ -1,0 +1,2 @@
+# Synthetic invalid credentials in the historical log-redaction fixture.
+96a5e27346dcfd53c3c4ff785abc9b79a499dba0:Tests/test_standalone_extensions.py:generic-api-key:15

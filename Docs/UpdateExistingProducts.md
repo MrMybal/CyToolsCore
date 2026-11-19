@@ -53,7 +53,10 @@ Installer le wheel officiel MIT dans l'environnement privé prévu par le logici
 ou le construire depuis le dépôt MIT sélectionné avec python -m build --no-isolation.
 Utiliser le Python du produit et son gestionnaire de dépendances existant. Mettre à
 jour requirements, contraintes, locks, configuration de build et métadonnées cohérentes.
-L'extra MCP est nécessaire seulement si le produit utilise ce transport.
+Depuis Core 0.11.0, les communications utilisent la bibliothèque native CyMCPSDK
+incluse dans le wheel de plateforme ; l’extra mcp reste vide pour compatibilité.
+Lire NativeCommunication.md et reconstruire les paquets du produit avec la vraie
+bibliothèque native. Ne pas conserver un ancien serveur MCP Python en parallèle.
 
 Ne pas copier ou réimplémenter le runtime, le scheduler ou les schémas dans le logiciel.
 Les intégrations C++/C# doivent conserver le même contrat portable. Conserver les
@@ -183,3 +186,23 @@ secrets, modèles, caches ou rapports privés dans le commit.
 Un commit final est possible dans le périmètre autorisé après vérification. Push,
 publication Fab, release ou réécriture d'historique nécessitent l'autorisation
 correspondante ; ce guide ne l'accorde pas à lui seul.
+
+
+## Core 0.11.0 — native communication
+
+Migrate communication through the platform wheel and preserve the Tool runtime,
+handlers, inputs, sessions and standalone UI. Include LICENCES/CyMCPSDK-MIT.txt and
+the native dependency notices with the application. Source builds require CMake,
+C++20 and the extended CyMCPSDK 0.7.1 before wheel packaging; end users do not need
+a compiler when the platform library is packaged. Validate actual CLI/MCP/HTTP
+entry points and task cleanup, not only installed Python metadata.
+
+
+## Effective AI capability discovery (0.11.0)
+
+Before starting the runtime, call `cytools_core.communication.register_operations(runtime)`.
+The read-only `ai_communication_status` operation reports the actually loaded native
+Core/CyMCPSDK versions, lifecycle rules and, with `includeOperations: true`, the
+complete effective operation schemas, permissions and resources. It does not start
+a server, call a provider or grant permissions. The scaffold includes this registration.
+MCP catalogues are paginated: follow `nextCursor` to inspect every operation.

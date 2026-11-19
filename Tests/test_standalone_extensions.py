@@ -12,7 +12,7 @@ def template(name):
 
 def test_log_redacts_disk_and_readback(tmp_path):
     module=template('standalone_log');journal=module.Journal(tmp_path)
-    journal.write('access_token=hf_123456789abcdef password=secret123 Authorization: Bearer abcdef')
+    journal.write('access_token=hf_123456789abcdef password=secret123 Authorization: Bearer abcdef')  # gitleaks:allow -- synthetic invalid credentials for redaction testing
     journal.handler.flush();text=journal.read()
     assert 'secret123' not in text and 'abcdef' not in text
     assert '[REDACTED]' in text

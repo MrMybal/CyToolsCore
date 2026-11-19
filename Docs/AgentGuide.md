@@ -192,3 +192,22 @@ Les groupes ne coordonnent pas des processus Runtime différents.
 
 Licence et redistribution commerciale : lire [Licensing.md](Licensing.md).
 Conserver les notices MIT du SDK et les licences distinctes des composants tiers.
+
+
+## Native communication (Core 0.11.0)
+
+Read [NativeCommunication.md](NativeCommunication.md). Use the platform Core wheel
+containing CyMCPSDK C++ communication; source builds must compile Native/ first.
+Do not add the Python MCP runtime or copy an old CLI/HTTP/MCP implementation.
+Keep the Tool handlers, manifest, task files and standalone UI integration.
+CLI `invoke` tasks are temporary; export wanted files with `--export-dir` or ExportJob.
+
+
+## Effective AI capability discovery (0.11.0)
+
+Before starting the runtime, call `cytools_core.communication.register_operations(runtime)`.
+The read-only `ai_communication_status` operation reports the actually loaded native
+Core/CyMCPSDK versions, lifecycle rules and, with `includeOperations: true`, the
+complete effective operation schemas, permissions and resources. It does not start
+a server, call a provider or grant permissions. The scaffold includes this registration.
+MCP catalogues are paginated: follow `nextCursor` to inspect every operation.

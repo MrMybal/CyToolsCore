@@ -61,3 +61,12 @@ Ne pas dépendre d'un chemin de développement privé dans la distribution final
 Le SDK livre des scripts console Python ; produire un `.exe` autonome avec son outil
 de packaging est une étape propre au Tool, à tester avec ses dépendances.
 La génération ne choisit pas de licence à la place du propriétaire du projet.
+
+
+## Native communication (Core 0.11.0)
+
+Read [NativeCommunication.md](NativeCommunication.md). Use the platform Core wheel
+containing CyMCPSDK C++ communication; source builds must compile Native/ first.
+Do not add the Python MCP runtime or copy an old CLI/HTTP/MCP implementation.
+Keep the Tool handlers, manifest, task files and standalone UI integration.
+CLI `invoke` tasks are temporary; export wanted files with `--export-dir` or ExportJob.

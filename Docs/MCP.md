@@ -1,9 +1,9 @@
 # Adaptateur MCP
 
-Installer l'extra `mcp`. L'implémentation utilise le SDK officiel Python, version 1.30.0
-épinglée explicitement. La ligne v2 n'est pas substituable sans migration.
-Références : [SDK officiel](https://github.com/modelcontextprotocol/python-sdk),
-[documentation v1](https://py.sdk.modelcontextprotocol.io/v1/).
+La communication utilise CyMCPSDK C++ 0.7.1. Installer le wheel natif du Core,
+ou compiler Native/ avant une installation source. Aucun SDK MCP Python n’est
+chargé par le serveur ; il sert uniquement de client de test. Voir
+[NativeCommunication.md](NativeCommunication.md).
 
 Commande autonome : `cytool-test --data-dir ./mcp-data mcp`.
 Le processus expose les opérations sous les noms `op_<operationId>` et un schéma
@@ -32,8 +32,8 @@ cytool-test --connect http://127.0.0.1:8766/v1 mcp
 ```
 
 La session est créée par le pont. Aucun clientId/owner arbitraire n'est accepté dans
-les arguments d'une opération. Déconnecter le pont d'un service n'annule pas les jobs
-du service ; les retrouver par cy_list_jobs à la reconnexion. En mode autonome, l'arrêt
+les arguments d'une opération. Déconnecter le pont termine ses propres tâches temporaires et demande leur
+annulation/nettoyage ; cela ne termine pas les tâches des autres clients. En mode autonome, l'arrêt
 du processus ferme son runtime et demande l'annulation des jobs restants.
 
 La suite de tests initialise un client officiel réel, découvre op_echo, l'appelle,

@@ -17,7 +17,7 @@
 - [Jobs](Jobs.md), [multi-client](MultiClient.md), [scheduler](Scheduler.md), [événements](Events.md).
 - [Ressources](Resources.md), [plateformes](Platforms.md), [modèles](Models.md), [workers](Workers.md).
 - [Dépendances](Dependencies.md), [téléchargements](Downloads.md).
-- [Transports](Transports.md), [MCP](MCP.md).
+- [Transports](Transports.md), [MCP](MCP.md), [communication native](NativeCommunication.md).
 
 ## Validation et limites
 

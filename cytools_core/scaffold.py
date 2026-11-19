@@ -89,7 +89,7 @@ def create_project(path, name, tool_id, *, desktop=False, mesh_viewer=False):
     (root/'LICENSE-CyToolsCore.txt').write_text(files('cytools_core').joinpath('templates', 'LICENSE-CyToolsCore.txt').read_text('utf-8'), encoding='utf-8')
     (root/'params.json').write_text('{"text": "Hello CyTools"}\n',encoding='utf-8')
     (root/'.gitignore').write_text('.venv/\n.cytools/\n__pycache__/\n.pytest_cache/\n',encoding='utf-8')
-    (root/'requirements.txt').write_text('# Install the CyToolsCore wheel or local checkout first.\ncytools-core==0.10.1\n',encoding='utf-8')
+    (root/'requirements.txt').write_text('# Install the CyToolsCore wheel or local checkout first.\ncytools-core==0.11.0\n',encoding='utf-8')
     guide=docs_path()/'AgentGuide.md'
     if guide.is_file():
         (root/'Docs').mkdir()

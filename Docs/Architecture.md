@@ -19,7 +19,9 @@ Façade ImGui du Tool / CLI / JSONL / HTTP / MCP
 Le SDK de référence utilise Python >= 3.11 pour les wrappers et workers.
 Le protocole JSON ne contient aucun type Python sérialisé ni dépendance UI.
 `jsonschema` valide Draft 2020-12 ; `psutil` fournit les mesures système.
-Le SDK officiel MCP est épinglé à 1.30.0 : sa ligne v2 nécessite une migration.
+Les transports IA passent par CyMCPSDK C++ 0.7.1 ; le paquet MCP Python 1.30.0
+est uniquement un client de test. Les façades Python sont des bindings C ABI,
+pas des serveurs de protocole. Voir NativeCommunication.md.
 Les transports, contrats et cycles de vie restent séparés ; une capacité déclarée
 ne constitue pas une capacité validée.
 
@@ -53,3 +55,12 @@ y compris après une annulation. Cette coordination est locale au Runtime.
 Les métriques du runtime sont copiées sous ce verrou ; les observations des adaptateurs
 workers sont réalisées ensuite, afin de ne pas inverser leurs propres verrous avec celui
 du scheduler. Un statut inconnu est signalé explicitement par `unknownWorkers`.
+
+
+## Communication native 0.11.0
+
+CLI / JSONL / HTTP / MCP / SDK natif -> CyMCPSDK C++ -> callback hôte authentifié
+-> LocalClient interne -> runtime métier existant. Le validateur Draft 2020-12 reste
+celui du runtime, appelé explicitement par le registre natif ; aucun mot-clé n’est supprimé.
+Le C++ ne reçoit aucune identité depuis les paramètres métier. Les appels réseau,
+le parsing CLI et le serveur MCP ne sont plus exécutés par Python.

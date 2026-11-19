@@ -12,7 +12,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install --keyring-provider disabled -e ".[mcp,dev]"
+      - uses: actions/checkout@v4
+        with:
+          repository: MrMybal/CyMCPSDK
+          ref: 791d4d7d7680213b282ec8529d248a10f8494d77
+          path: .native-deps/CyMCPSDK
+      - run: git -C .native-deps/CyMCPSDK apply ../../Native/patches/CyMCPSDK-0.7.1-host.patch
+      - if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
+      - run: python scripts/build_native.py --cymcp-source .native-deps/CyMCPSDK
+      - run: python -m pip install --keyring-provider disabled -e ".[dev]"
       - run: python -m pytest -q
       - run: python -m build
       - uses: actions/upload-artifact@v4

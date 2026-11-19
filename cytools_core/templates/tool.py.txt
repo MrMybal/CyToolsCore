@@ -13,6 +13,8 @@ def create_runtime(data_dir, **options):
         return {'text': parameters['text']}
 
     runtime.register('echo', echo)
+    from cytools_core.communication import register_operations
+    register_operations(runtime)
     return runtime
 
 

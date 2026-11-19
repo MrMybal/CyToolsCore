@@ -15,7 +15,8 @@ loading a configuration must never start a job or restore credentials.
 Install the CyToolsCore wheel from the SDK's dist/ directory, or:
 
 ```powershell
-python -m pip install -e '<SDK_ROOT>[mcp]'
+python -m pip install 'cytools-core==0.11.0'
+# Source development: build the native library first; see Docs/NativeCommunication.md.
 ```
 
 Replace that development path with your actual SDK checkout. There is no required

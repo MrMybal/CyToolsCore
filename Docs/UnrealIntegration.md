@@ -1,5 +1,12 @@
 # Unreal integration
 
+Core 0.11.0 uses [CyMCPSDK](https://github.com/MrMybal/CyMCPSDK) for native
+communication. Read [NativeCommunication.md](NativeCommunication.md). Existing
+plugin integrations must explicitly update their bindings and packaged libraries;
+this Core migration does not validate a new Unreal engine integration. The legacy
+CyUEMCPSDK companion notes below describe its existing architecture, not a required
+Python communication dependency for a new native integration.
+
 [CyUEMCPSDK](https://github.com/MrMybal/CyUEMCPSDK) adapts CyToolsCore contracts
 to Unreal plugins. Follow its Docs/Integration.md and Docs/UpdateExistingPlugin.md.
 For an existing plugin, embed and adapt the C++ sources into its existing modules;

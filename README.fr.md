@@ -6,9 +6,9 @@
 
 [English](README.md) | **Français**
 
-Socle autonome pour créer des CyTools : standard JSON v1, SDK/runtime Python,
-jobs, sessions, isolation des clients, réservation de ressources et adaptateurs
-CLI, JSONL, HTTP local et MCP. Version du SDK : **0.10.1** ; schéma : **1** ; protocole : **1.0**.
+Socle autonome pour créer des CyTools : standard JSON v1, runtime métier Python
+pour les jobs, sessions, fichiers et ressources, avec communication native C++
+CLI, JSONL, HTTP, MCP et SDK via CyMCPSDK. Version du SDK : **0.11.0** ; schéma : **1** ; protocole : **1.0**.
 
 Chaque Tool embarque ou référence ce SDK. Aucun CyToolsManager, modèle IA,
 compte fournisseur ou composant graphique n'est nécessaire.
@@ -19,14 +19,18 @@ Depuis ce dossier, avec Python 3.11 ou plus récent :
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\python -m pip install --keyring-provider disabled -e '.[mcp,dev]'
+.\.venv\Scripts\python scripts/build_native.py --cymcp-source ../CyMCPSDK
+.\.venv\Scripts\python -m pip install --keyring-provider disabled -e '.[dev]'
 .\.venv\Scripts\python -m pytest -q
 .\.venv\Scripts\cytool-test describe
 .\.venv\Scripts\cytool-test invoke progress_test
 ```
 
 Sous Linux/macOS, remplacer `.venv\Scripts\` par `.venv/bin/`.
-L'extra `mcp` est optionnel ; `pip install -e .` suffit pour le runtime et la CLI.
+Les communications nécessitent la bibliothèque native incluse dans le wheel. Depuis
+les sources : CMake 3.24+, C++20 et CyMCPSDK 0.7.1. L’extra `mcp` reste vide pour
+compatibilité ; le paquet MCP Python sert uniquement aux tests. Voir
+[communication native](Docs/NativeCommunication.md).
 
 ## Créer un Tool
 
@@ -75,7 +79,8 @@ la résolution vidéo, les modèles dérivés, les LoRA et le choix CPU/GPU : vo
 
 Voir [l'état des fonctionnalités](Docs/ImplementationStatus.md) et
 [le compte rendu de validation](Docs/Validation.md) avant une intégration métier.
-Les SDK natifs C++/C# ne sont pas livrés : ces langages peuvent déjà utiliser le protocole
+Le SDK de communication C++ et l’ABI C sont livrés ; le runtime métier reste Python.
+C# et les workers externes peuvent utiliser le protocole
 JSON ou être exécutés comme workers. Linux/macOS disposent d'une matrice CI ; un test
 local Windows ne constitue pas une validation exécutée sur ces plateformes.
 

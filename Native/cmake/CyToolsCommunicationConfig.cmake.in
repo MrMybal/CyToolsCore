@@ -1,0 +1,4 @@
+@PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
+find_dependency(CyMCPSDK 0.7.1 CONFIG REQUIRED)
+include("${CMAKE_CURRENT_LIST_DIR}/CyToolsTargets.cmake")

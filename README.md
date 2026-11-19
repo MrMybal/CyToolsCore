@@ -7,8 +7,9 @@
 **English** | [Français](README.fr.md)
 
 A standalone foundation for building CyTools: the CyTools JSON v1 standard,
-a Python SDK and runtime, jobs, sessions, client isolation, resource reservations,
-and CLI, JSONL, local HTTP and MCP adapters. SDK version: **0.10.1**; schema: **1**;
+a Python Tool runtime for jobs, sessions, client isolation and resource reservations,
+with native C++ CLI, JSONL, HTTP, MCP and communication SDK through CyMCPSDK.
+SDK version: **0.11.0**; schema: **1**;
 protocol: **1.0**.
 
 Each Tool embeds or references this SDK. CyToolsManager, AI models, provider accounts
@@ -20,14 +21,17 @@ From this directory, with Python 3.11 or later:
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\python -m pip install --keyring-provider disabled -e '.[mcp,dev]'
+.\.venv\Scripts\python scripts/build_native.py --cymcp-source ../CyMCPSDK
+.\.venv\Scripts\python -m pip install --keyring-provider disabled -e '.[dev]'
 .\.venv\Scripts\python -m pytest -q
 .\.venv\Scripts\cytool-test describe
 .\.venv\Scripts\cytool-test invoke progress_test
 ```
 
 On Linux/macOS, replace `.venv\Scripts\` with `.venv/bin/`.
-The `mcp` extra is optional; `pip install -e .` is enough for the runtime and CLI.
+Communication requires the packaged native library (CMake 3.24+, C++20 and CyMCPSDK
+0.7.1 for source builds). The `mcp` extra is retained empty for compatibility. The
+Python MCP package is used only as a test client. See [native communication](Docs/NativeCommunication.md).
 
 ## Creating a Tool
 
@@ -77,8 +81,9 @@ resolution, derived models, LoRA adapters and CPU/GPU selection: see
 
 Read the [implementation status](Docs/ImplementationStatus.md) and
 [validation report](Docs/Validation.md) before integrating a backend.
-Native C++/C# SDKs are not shipped: those languages can already use the JSON protocol
-or run as workers. Linux/macOS have a CI matrix; a local Windows test does not establish
+A native C++ communication SDK and a C ABI are shipped. The Tool scheduler/runtime
+remains Python; this is not a full C++ port of the Tool engine. C# can use the JSON
+protocol or the C ABI. Native clients can use `cytools-native --connect URL` without Python. Linux/macOS have a CI matrix; a local Windows test does not establish
 that validation has run on those platforms.
 
 ## First tested model: CLAP
@@ -108,3 +113,7 @@ You may use, modify and redistribute the SDK, including in commercial products,
 provided you retain the license text and copyright notice.
 It is provided without warranty, including any warranty of merchantability or fitness
 for a particular purpose. Third-party dependencies and models retain their own licenses.
+
+## Subtitle Tool
+
+[CyTools_Subtitle](Tools/CyTools_Subtitle/app/README.md) generates local Phonon word-timed SRT/WebVTT/JSON subtitles from audio/video, with an ImGui player/editor and MCP correction operations. Windows CPU validation and explicit limits are recorded in its delivery reports.

@@ -144,3 +144,12 @@ compatibles et choix de périphérique effectivement utilisé par le worker.
 Lire [FullOperationAccess.md](FullOperationAccess.md) : inventaire des capacités natives, parité complète des options métier entre IA et standalone, contrats de sorties composables et preuves de validation. Un formulaire simplifié ne limite pas le contrat du Tool.
 
 Lire Docs/AutomaticInputs.md (AutomaticInputs.md depuis Docs) : chemins absolus acceptés pour les entrées locales, copie automatique privée par job, aucune copie manuelle exigée de l’IA.
+
+
+## Native communication (Core 0.11.0)
+
+Read [NativeCommunication.md](NativeCommunication.md). Use the platform Core wheel
+containing CyMCPSDK C++ communication; source builds must compile Native/ first.
+Do not add the Python MCP runtime or copy an old CLI/HTTP/MCP implementation.
+Keep the Tool handlers, manifest, task files and standalone UI integration.
+CLI `invoke` tasks are temporary; export wanted files with `--export-dir` or ExportJob.

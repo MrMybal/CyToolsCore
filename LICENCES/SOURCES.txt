@@ -1,0 +1,7 @@
+CyToolsCore: https://github.com/MrMybal/CyToolsCore
+CyMCPSDK: https://github.com/MrMybal/CyMCPSDK
+nlohmann/json 3.12.0: https://github.com/nlohmann/json
+cpp-httplib 0.66.0: https://github.com/yhirose/cpp-httplib
+PicoSHA2: https://github.com/okdshin/PicoSHA2
+Windows native transport links system WinHTTP, Winsock and cryptographic APIs.
+Linux/macOS HTTP requires libcurl and its platform TLS dependencies; preserve their notices when distributing them.

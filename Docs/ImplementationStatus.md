@@ -1,6 +1,6 @@
-# État de l'implémentation 0.10.1
+# État de l'implémentation 0.11.0
 
-Le schéma CyTools v1 est la base portable ; le SDK 0.10.1 est son implémentation
+Le schéma CyTools v1 est la base portable ; le SDK 0.11.0 est son implémentation
 de référence. Ce fichier distingue ce qui fonctionne de ce qu'un backend doit fournir.
 
 | Domaine | Livré et exécutable |
@@ -15,7 +15,7 @@ de référence. Ce fichier distingue ce qui fonctionne de ce qu'un backend doit 
 | Workers | Processus one-shot JSON, arrêt, tentative d'arrêt des descendants, détection de crash, relance, release |
 | Downloads | HTTPS, partials persistants, pause/reprise, ETag/Range, SHA256/taille, verify/remove, cache lié à la source |
 | Stockage | SQLite, historique des jobs, sessions/clients, settings d'identité, observations, récupération Interrupted |
-| Transports | Native Python, CLI JSON, JSONL, HTTP loopback authentifié, MCP stdio officiel et pont vers service partagé |
+| Transports | CyMCPSDK C++ : CLI JSON, JSONL, HTTP loopback authentifié, MCP stdio et pont vers service partagé ; bindings Python compatibles |
 | Création de Tool | Générateur avec option --desktop, structure app/data/runtime, façade ImGui optionnelle, source du lanceur Windows, script Linux, tests et contrat de livraison |
 | Options autonomes | Templates Dear ImGui : anglais par défaut, français, préférences persistantes et informations de licence ; intégration et traductions métier à finaliser dans chaque Tool |
 | Diagnostics autonomes | Journal tournant, champ multiligne sélectionnable, copie intégrale, exceptions et événements authentifiés ; stderr des workers conservé dans leur workspace |
@@ -29,7 +29,7 @@ de référence. Ce fichier distingue ce qui fonctionne de ce qu'un backend doit 
 
 ## Limites explicites
 
-- Pas de SDK natif C++ ou C# complet : wire protocol commun et exemples disponibles.
+- SDK de communication C++ et ABI C livrés ; le runtime métier des Tools reste Python. Pas de runtime Tool entièrement porté en C++, ni de SDK C# complet.
 - Pas de GUI chargée dans le Core. Le scaffold desktop fournit une façade ImGui à finaliser dans le Tool ; pas de CyToolsManager, découverte réseau ou registre global.
 - Le Core ne fournit pas un updater GitHub universel : le contrat de livraison impose son implémentation dans le Tool, avec un exemple concret SPAR3D. Le scaffold ne prétend pas télécharger un modèle ou gérer une licence tout seul.
 - Pas de scheduler distribué ni de limite OS matérielle ; les réservations sont locales
@@ -67,3 +67,19 @@ sans bloquer les opérations indépendantes. CanRun expose waitingForConcurrency
 Tests dédiés : API locale, MCP via HTTP, priorités, budgets, groupes multiples,
 annulation différée, délais, erreurs et confidentialité des IDs de réservation.
 Cette version ne fournit pas de verrou GPU global entre processus autonomes.
+
+## CyTools_Subtitle 0.2.0 (2026-10-24)
+
+Tool séparé dans Tools/CyTools_Subtitle : transcription locale Phonon-2/2.5 par fenêtres, sous-titres SRT/WebVTT/JSON, lecteur audio/vidéo ImGui, édition des timings et descriptions sonores par MCP. Inférences anglaise/française et vidéo MCP exécutées sur Windows CPU. Linux/macOS inconnus ; pas de séparation neuronale, traduction, diarisation ni GPU annoncés. Voir app/Docs/Validation.md et data/reports du Tool. Le contrat SDK reste 0.10.1.
+
+CyTools_Subtitle 0.2.0 ajoute la correction bornée des durées de lecture et chevauchements, automatique à la génération et disponible par MCP/ImGui. Les mots et les cas rapides non résolus restent conservés et signalés.
+
+
+## SDK 0.11.0 — communications natives
+
+Voir NativeCommunication.md : les transports sont remplacés par CyMCPSDK 0.7.1,
+sans changer le schéma 1, le protocole 1.0 ou les handlers des Tools. Les tests
+utilisent un vrai client MCP, plusieurs identités et des schémas avec références.
+Le wheel est désormais spécifique à la plateforme et inclut la bibliothèque native.
+Les fichiers temporaires de la CLI sont purgés ; les exports sont explicites.
+Aucune validation Linux/macOS ou de fournisseur IA n’est déduite des tests Windows.

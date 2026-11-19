@@ -34,3 +34,8 @@ Tools/*/Docs/
 scripts/check_six_launchers.py
 scripts/validate_ltx_real.py
 scripts/validate_ltx_cancel.py
+
+# Platform artifacts built from the native communication sources
+cytools_core/native/
+
+.native-deps/
